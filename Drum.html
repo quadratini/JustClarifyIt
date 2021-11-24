@@ -1,0 +1,179 @@
+<html>
+	<head>
+		<style>
+		h1 {
+			text-align: center;
+		}
+		.vertical-center {
+			margin: 0;
+			position: absolute;
+			left: 50%;
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+		.vertical-center2 {
+			margin: 0;
+			position: absolute;
+			left: 50%;
+			top: 15%;
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+		.vertical-center3 {
+			margin: 0;
+			position: absolute;
+			left: 50%;
+			top: 21%;
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+		.vertical-center4 {
+			margin: 0;
+			position: absolute;
+			left: 50%;
+			top: 27%;
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+		.vertical-center5 {
+			margin: 0;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+		
+		</style>
+	</head>
+	
+	<h1>Drums</h1>
+	<div class="vertical-center">
+		<button id="drumButton1">HiHat1</button>
+		<button id="drumButton2">HiHat2</button>
+		<button id="drumButton3">Ride1</button>
+		<button id="drumButton4">Ride2</button>
+		<button id="drumButton5">RideBell</button>
+		<button id="drumButton6">RideCrash</button>
+	</div>
+	<div class="vertical-center2">
+		<button id="drumButton7">HiTom1</button>
+		<button id="drumButton8">HiTom2</button>
+		<button id="drumButton7">LowTom1</button>
+		<button id="drumButton8">LowTom2</button>
+	</div>
+	<div class="vertical-center3">
+		<button id="drumButton7">Snare1</button>
+		<button id="drumButton8">Snare2</button>
+	</div>
+	<div class="vertical-center4">
+		<button id="drumButton7">Kick</button>
+	</div>
+	
+	
+</html>
+
+<script>
+	let drumButton1 = document.getElementById("drumButton1");
+	let drumButton2 = document.getElementById("drumButton2");
+	
+	// first row
+	let drum1 = new Audio('./drumAudios/1pearlkit-hihat.wav');
+	let drum2 = new Audio('./drumAudios/1pearlkit-hihatO.wav');
+	let drum3 = new Audio('./drumAudios/1pearlkit-ride1.wav');
+	let drum4 = new Audio('./drumAudios/1pearlkit-ride2.wav');
+	let drum5 = new Audio('./drumAudios/1pearlkit-ridebell.wav'); 
+	let drum6 = new Audio('./drumAudios/1pearlkit-ridecrash.wav');
+	
+	// second row
+	let drum7 = new Audio('./drumAudios/2pearlkit-hitom1.wav'); 
+	let drum8 = new Audio('./drumAudios/2pearlkit-hitom2.wav');
+	
+	// third row
+	let drum9 = new Audio('./drumAudios/3pearlkit-lowtom1.wav');
+	let drum10 = new Audio('./drumAudios/3pearlkit-lowtom2.wav'); 
+	
+	// fourth row
+	let drum11 = new Audio('./drumAudios/4pearlkit-kick.wav'); 
+	
+	// fifth row
+	let drum12 = new Audio('./drumAudios/5pearlkit-snare1.wav'); 
+	let drum13 = new Audio('./drumAudios/5pearlkit-snare2.wav'); 
+	
+	// clicking buttons
+	drumButton1.onclick = () => {
+		drum1.currentTime = 0;
+		drum1.play();
+	}
+	drumButton2.onclick = () => {
+		drum2.currentTime = 0;
+		drum2.play();
+	}
+	
+	window.addEventListener('keydown', (e) => {
+	
+		// first row
+		if (e.key == 'q') {
+			drum1.currentTime = 0;
+			drum1.play();
+		}
+		if (e.key == 'w') {
+			drum2.currentTime = 0;
+			drum2.play();
+		}
+		if (e.key == 'e') {
+			drum3.currentTime = 0;
+			drum3.play();
+		}
+		if (e.key == 'i') {
+			drum4.currentTime = 0;
+			drum4.play();
+		}
+		if (e.key == 'o') {
+			drum5.currentTime = 0;
+			drum5.play();
+		}
+		if (e.key == 'p') {
+			drum6.currentTime = 0;
+			drum6.play();
+		}
+		
+		// second row
+		if (e.key == 'd') {
+			drum7.currentTime = 0;
+			drum7.play();
+		}
+		if (e.key == 'f') {
+			drum8.currentTime = 0;
+			drum8.play();
+		}
+		if (e.key == 'j') {
+			drum9.currentTime = 0;
+			drum9.play();
+		}
+		if (e.key == 'k') {
+			drum10.currentTime = 0;
+			drum10.play();
+		}
+		
+		// fourth row
+		if (e.key == 'v') {
+			drum12.currentTime = 0;
+			drum12.play();
+		}
+		if (e.key == 'n') {
+			drum13.currentTime = 0;
+			drum13.play();
+		}
+
+		// fifth row
+		if (e.key == ' ') {
+			drum11.currentTime = 0;
+			drum11.play();
+		}
+	});
+	
+
+	
+</script>
+

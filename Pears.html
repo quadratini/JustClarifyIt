@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<script src="Pears2.js"></script>
+		<style>
+		.matched {
+			background-color: green;
+		}
+		</style>
+	</head>
+		<body>
+		<div id="row1">
+			<span id="card1">[]</span>
+			<span id="card2">[]</span>
+			<span id="card3">[]</span>
+		</div>
+		<div id="row2">
+			<span id="card4">[]</span>
+			<span id="card5">[]</span>
+			<span id="card6">[]</span>
+		</div>
+	</body>
+</html>
+
+<script>
+	const numCards = 6;
+	let cards = [];
+	for (let i = 0; i < numCards; i++) {
+		cards[i] = document.getElementById("card" + (i+1));
+	}
+	
+	let faces = [
+		"x",
+		"y",
+		"z"
+	]
+	
+	let allCardValues = [];
+	
+	for (let i = 0; i < faces.length; i++) {
+		let face = faces[i];
+		for (let j = 0; j < 2; j++) {
+			let randomIndex = getRandomInt(numCards);
+			while (typeof allCardValues[randomIndex] !== "undefined") {
+				randomIndex = getRandomInt(numCards);
+			}
+			allCardValues[randomIndex] = face;
+		}
+	}
+	
+	console.log(allCardValues);
+	let pairArray = [];
+	
+	for (let i = 0; i < numCards; i++) {
+		cards[i].addEventListener("click", async function() {
+			cards[i].innerHTML = "[" + allCardValues[i] + "]";
+			pairArray.push(allCardValues[i]);
+			if ((pairArray[0] == pairArray[1])){ // matching pair
+				for (let i = 0; i < numCards; i++) {
+				if (cards[i].innerHTML == ("[" + pairArray[0] + "]")) {
+						cards[i].style.backgroundColor = "green";
+					}
+				}
+			} else if (pairArray.length == 2) { // no match
+				for (let i = 0; i < numCards; i++) {
+					console.log(cards[i].innerHTML.indexOf(pairArray[0] !== -1));
+					if (cards[i].innerHTML == ("[" + pairArray[0] + "]")) {
+						cards[i].style.backgroundColor = "red";
+					}
+					if (cards[i].innerHTML == ("[" + pairArray[1] + "]")) {
+						cards[i].style.backgroundColor = "red";
+					}
+				}
+				
+				await sleep(1000);
+				
+				for (let i = 0; i < numCards; i++) {
+					console.log(cards[i].innerHTML.indexOf(pairArray[0] !== -1));
+					if (cards[i].innerHTML == ("[" + pairArray[0] + "]")) {
+						cards[i].style.backgroundColor = "transparent";
+					}
+					if (cards[i].innerHTML == ("[" + pairArray[1] + "]")) {
+						cards[i].style.backgroundColor = "transparent";
+					}
+				}
+				
+				for (let i = 0; i < numCards; i++) {
+					console.log(cards[i].innerHTML.indexOf(pairArray[0] !== -1));
+					if (cards[i].innerHTML == ("[" + pairArray[0] + "]")) {
+						cards[i].innerHTML = "[]";
+						break;
+					}
+				}
+				cards[i].innerHTML = "[]";
+			}
+			if (pairArray.length == 2) {
+				pairArray = [];
+				console.log("clear pairs");
+			}
+			
+		});
+	}
+	
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	
+	
+	function getRandomInt(max) {
+		return Math.floor(Math.random() * max);
+	}
+	
+	/*const cardsPerRow = 3;
+
+	let row1 = document.getElementById("row1");
+	let card = document.createElement("span");
+	let brackets = document.createTextNode("[]");
+	
+	for (let j = 0; j < idk; j++) {
+		for (let i = 0; i < cardsPerRow; i++) {
+			let card = document.createElement("span");
+			card.id = i;
+			
+			card.appendChild(brackets);
+			console.log(card.id);
+			
+		}
+	} */
+
+
+
+	/*let row1 = document.getElementById("row1");
+	
+	let div = document.createElement("div");
+	let brackets = document.createTextNode("[]");
+	
+	div.appendChild(brackets);
+	console.log(div);
+	
+	let div2 = div.cloneNode(true);
+	console.log(div2);
+	
+	row1.appendChild(div);
+	row1.appendChild(div2); */
+</script>
