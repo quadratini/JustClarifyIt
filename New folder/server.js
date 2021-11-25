@@ -5,24 +5,21 @@ var PORT = 8000;
 
 const fs = require('fs');
 const dir = './public/pairsImages/randomImages';
+const imagesDir = './pairsImages/randomImages/';
 let fileSize;
 let filePaths = [];
 
 fs.readdir(dir, (err, files) => {
-	filePaths.push(files);
 	fileSize = files.length;
+	for (let i = 0; i < fileSize; i++) {
+		filePaths.push(imagesDir + files[i]);
+	}
+	console.log(filePaths);
 });
 
 app.listen(PORT, function() {
     console.log('Server is running on PORT:',PORT);
 });
-
-/*
-app.get('/Pears2.html', (req, res) => {
-	console.log("sending");
-	res.send("./Pears2.html");
-});
-*/
 
 app.get('/Pears2.html', function(req, res) {
 	console.log("pears2");
