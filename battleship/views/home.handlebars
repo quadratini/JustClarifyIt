@@ -1,0 +1,93 @@
+<style>
+    img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<h1>We're going to BATTLE</h1>
+    <body>
+        <div>
+            <h3>Input game size. Example: [4] x [4] (4 rows and 4 columns of cards)</h3>
+            <input id="rowSize" value="5" placeHolder="How many rows?..."></input>
+            <input id="colSize" value="5" placeHolder="How many columns?..."></input>
+            <button id="startButton" onclick="startGame()">Generate cards</button>
+        </div>
+        <div id="game"></div>
+    </body>
+
+
+<script>
+    function startGame() {
+        let rowSizeInput = document.getElementById("rowSize");
+        let colSizeInput = document.getElementById("colSize");
+        let game = document.getElementById("game");
+        let startButton = document.getElementById("startButton");
+        let rowSize = rowSizeInput.value;
+        let colSize = colSizeInput.value;
+
+        const NUM_SHIPS = 3;
+        const MAX_SHIP_SIZE = 3;
+        const NUM_CARDS = rowSize * colSize;
+
+        let cardCover = "./pairsImages/water.png";
+        let hitImage = "./pairsImages/hit.jpg";
+        let missImage = "./pairsImages/miss.png"
+
+        // create document elements
+        let rows = [];
+        for (let row = 0; row < rowSize; row++) {
+            let newDiv = document.createElement("div");
+            for (let col = 0; col < colSize; col++) {
+                let newImg = document.createElement("img");
+                newImg.id = "coordinate" + row + col;
+                newImg.src = cardCover;
+                newDiv.appendChild(newImg);
+            }
+            console.log(newDiv);
+            rows.push(newDiv);
+        }
+
+        console.log(rows);
+
+        for (let i = 0; i < rows.length; i++) {
+            game.appendChild(rows[i]);
+        }
+
+        // set element ids
+        let cards = [];
+        for (let row = 0; row < rowSize; row++) {
+            for (let col = 0; col < colSize; col++) {
+                cards.push(document.getElementById("coordinate" + row + col))
+            }
+        }
+        console.log(cards);
+
+        // determine where to place the ships
+        let shipX = [];
+        let shipY = [];
+
+        for (let i = 0; i < NUM_SHIPS; i++) {
+            let randomX = getRandomInt(rowSize);
+            let randomY = getRandomInt(colSize);
+            shipX.push(randomX);
+            shipY.push(randomY);
+        }
+
+        for (let row = 0; row < rowSize; row++) {
+            for (let col = 0; col < colSize; col++) {
+                if (("" + shipX[row] + shipY[col]) === ("" + row + col)) {
+                    cards[(col + row * colSize)].src = hitImage;
+                    console.log(cards[row]);
+                }
+            }
+        }
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+</script>

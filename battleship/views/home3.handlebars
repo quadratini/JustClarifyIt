@@ -1,0 +1,202 @@
+<html lang="">
+    <style>
+        img {
+            width: 50px;
+            height: 50px;
+        }
+        .playerTurn {
+            border-style: solid;
+            border-color: green;
+            width: fit-content;
+        }
+        .enemyTurn {
+            border-style: solid;
+            border-color: red;
+            width: fit-content;
+        }
+    </style>
+    <h1>We're GOING TO BATTLE</h1>
+    <h2>Player 1</h2>
+    <div id="game" class="playerTurn"></div>
+    <h2>Player 2</h2>
+    <div id="game2" class="enemyTurn"></div>
+</html>
+
+<script>
+    const ROW_SIZE = 8;
+    const COL_SIZE = 8;
+    const SHIP_LENGTH = 3;
+    const NUM_SHIPS1 = 8;
+    const NUM_SHIPS2 = 8;
+    const CARD_COVER = "./pairsImages/water.png";
+    const HIT_IMAGE = "./pairsImages/hit.jpg";
+    const MISS_IMAGE = "./pairsImages/miss.png";
+
+    let game = document.getElementById("game");
+    let game2 = document.getElementById("game2");
+    // let hitsHUD = document.getElementById("hits");
+    // let missesHUD = document.getElementById("misses");
+    let gameBoard = [];
+    let gameBoard2 = [];
+    let hiddenBoard = [];
+    let hiddenBoard2 = [];
+    let shipsPlaced = 0;
+    let shipsPlaced2 = 0;
+
+    createBoard(gameBoard, game);
+    createBoard(gameBoard2, game2);
+    hiddenBoard = initHiddenBoard(gameBoard, game);
+    hiddenBoard2 = initHiddenBoard(gameBoard2, game2);
+    placeAllShips(shipsPlaced, hiddenBoard);
+    placeAllShips(shipsPlaced2, hiddenBoard2);
+
+    initButtons(gameBoard, hiddenBoard);
+    initButtons(gameBoard2, hiddenBoard2);
+    // showHiddenBoard(gameBoard, hiddenBoard);
+    // showHiddenBoard(gameBoard2, hiddenBoard2);
+
+    let playerTurn;
+    let enemyTurn;
+
+    function initButtons(gameBoard, hiddenBoard) {
+        for (let i = 0; i < ROW_SIZE; i++) {
+            for (let j = 0; j < COL_SIZE; j++) {
+                let imgEl = gameBoard[i].children[j];
+                imgEl.addEventListener('click', () => {
+                    if (game.className === "playerTurn") {
+                        game.className = "enemyTurn";
+                        game2.className = "playerTurn";
+                    } else {
+                        game.className = "playerTurn";
+                        game2.className = "enemyTurn";
+                    }
+                    let x = imgEl.id[0];
+                    let y = imgEl.id[1];
+
+                    if (hiddenBoard[x][y] === 0) { // no ship there
+                        imgEl.src = "./pairsImages/miss.png";
+                        // misses++;
+                        // missesHUD.innerHTML = "Misses: " + misses;
+                    } else { // ship there
+                        imgEl.src = "./pairsImages/hit.jpg";
+                        // hits++;
+                        // hitsHUD.innerHTML = "Hits: " + hits;
+                    }
+                });
+            }
+        }
+    }
+
+    function showHiddenBoard(gameBoard, hiddenBoard) {
+        for (let i = 0; i < ROW_SIZE; i++) {
+            for (let j = 0; j < COL_SIZE; j++) {
+                if (hiddenBoard[i][j] === 1) {
+                    gameBoard[i].children[j].src = "./pairsImages/hit.jpg";
+                } else {
+                    gameBoard[i].children[j].src = "./pairsImages/miss.png";
+                }
+            }
+        }
+    }
+
+    function placeAllShips(shipsPlaced, hiddenBoard) {
+        while (NUM_SHIPS1 > shipsPlaced) {
+            if(putShipInRandomPosition(hiddenBoard)) {
+                shipsPlaced++;
+            }
+        }
+    }
+
+    function putShipInRandomPosition(hiddenBoard) {
+        let randomPosition = getRandomPosition();
+        let shipPlaced;
+        let requiredSpaces = SHIP_LENGTH;
+        let availableSpaces = 0;
+
+        let randomRotation = getRandomInt(2);
+        for (let i = 0; i < requiredSpaces; i++) { // check  if there are enough spaces
+            if (randomRotation === 0) { // vertical
+                if (randomPosition.y + i <= ROW_SIZE - 1) {
+                    if (hiddenBoard[randomPosition.y + i][randomPosition.x] === 0) {
+                        availableSpaces++;
+                    } else {
+                        break;
+                    }
+                }
+            } else { // horizontal
+                if (randomPosition.x + i <= COL_SIZE - 1) {
+                    if (hiddenBoard[randomPosition.y][randomPosition.x + i] === 0) {
+                        availableSpaces++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (availableSpaces === requiredSpaces) {
+            placeShip(requiredSpaces, randomPosition, randomRotation, hiddenBoard);
+            shipPlaced = true;
+        } else {
+            shipPlaced = false;
+        }
+        return shipPlaced;
+    }
+
+    function placeShip(requiredSpaces, randomPosition, randomRotation, hiddenBoard) {
+        if (randomRotation === 0) {
+            for (let i = 0; i < requiredSpaces; i++) {
+                hiddenBoard[randomPosition.y + i][randomPosition.x] = 1;
+            }
+        } else {
+            for (let i = 0; i < requiredSpaces; i++) {
+                hiddenBoard[randomPosition.y][randomPosition.x + i] = 1;
+            }
+        }
+    }
+
+    function initHiddenBoard(gameBoard) {
+        let board = [];
+        for (let i = 0; i < ROW_SIZE; i++) {
+            let array = [];
+            for (let j = 0; j < COL_SIZE; j++) {
+                array.push(0);
+            }
+            board.push(array);
+        }
+        gameBoard = board;
+        console.log(gameBoard);
+        return gameBoard;
+    }
+
+    function getRandomPosition() {
+        let randomX = getRandomInt(COL_SIZE);
+        let randomY = getRandomInt(ROW_SIZE);
+
+        return {
+            x: randomX,
+            y: randomY
+        }
+    }
+
+    function createBoard(gameBoard, game) {
+        for (let i = 0; i < ROW_SIZE; i++) {
+            let newDiv = document.createElement("div");
+            for (let j = 0; j < COL_SIZE; j++) {
+                let newImg = document.createElement("img");
+                newImg.id = "" + i + j;
+                newImg.src = CARD_COVER;
+                newDiv.appendChild(newImg);
+            }
+            gameBoard.push(newDiv);
+        }
+
+        for (let i = 0; i < gameBoard.length; i++) {
+            game.appendChild(gameBoard[i]);
+        }
+    }
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+</script>

@@ -62,7 +62,6 @@ function startGame() {
 		console.log(cards);
 		
 		let allCardValues = [];
-		console.log(allCardValues[1]);
 		for (let i = 0; i < numCards / 2; i++) {
 			let face = imagePaths[i];
 			for (let j = 0; j < 2; j++) {
@@ -108,7 +107,7 @@ function startGame() {
 				}
 			});
 		}
-	};
+	}
 }
 
 function sleep(ms) {

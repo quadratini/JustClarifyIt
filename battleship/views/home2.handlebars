@@ -1,0 +1,162 @@
+<style>
+    img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+    <body>
+        <div id="game"></div>
+    </body>
+
+<script>
+    const ROW_SIZE = 5;
+    const COL_SIZE = 5;
+    const NUM_SHIPS = 5;
+
+    let cardCover = "./pairsImages/water.png";
+    let hitImage = "./pairsImages/hit.jpg";
+    let missImage = "./pairsImages/miss.png"
+    let game = document.getElementById("game");
+    let rows = [];
+
+    // creating the html elements to display images
+    for (let row = 0; row < ROW_SIZE; row++) {
+        let newDiv = document.createElement("div");
+        for (let col = 0; col < COL_SIZE; col++) {
+            let newImg = document.createElement("img");
+            newImg.id = "" + row + col;
+            newImg.src = cardCover;
+            newDiv.appendChild(newImg);
+        }
+        rows.push(newDiv);
+    }
+
+    // adding elements to the browser to display images
+    for (let i = 0; i < rows.length; i++) {
+        game.appendChild(rows[i]);
+    }
+
+    console.log(rows);
+    console.log(isOccupied(0, 0));
+
+    let ships = [];
+
+    for (let i = 0; i < 3; i++) { // this loop is for how many ships there will be
+        let randomCoordinates = getRandomCoordinates();
+        if (!isOccupied(randomCoordinates.x, randomCoordinates.y)) {
+            ships.push(randomCoordinates);
+            let row = rows[i];
+            for (let j = 0; j < 3; j++) { // to create a long ship
+                let child = row.children[j];
+                let childId = child.id;
+                for (let k = 0; k < ROW_SIZE; k++) {
+                    let imageX = childId[1];
+                    let imageY = childId[0];
+                    console.log(childId[0] + " " + childId[1]);
+                    console.log("coord " + randomCoordinates.x + " " + randomCoordinates.y);
+                    if (imageY == randomCoordinates.y && imageX == randomCoordinates.x) {
+                        child.src = hitImage;
+                    }
+                }
+            }
+        } else {
+            i--;
+        }
+    }
+
+
+    // for (let row = 0; row < ROW_SIZE; row++) {
+    //     let aRow = rows[row];
+    //
+    //     for (let col = 0; col < COL_SIZE; col++) {
+    //         let child = aRow.children[col];
+    //         let childId = child.id;
+    //         for (let i = 0; i < ROW_SIZE; i++) {
+    //             let ship = shipsArray[i];
+    //             if (ship === childId) {
+    //                 child.src = hitImage;
+    //             }
+    //         }
+    //
+    //     }
+    // }
+
+    console.log(ships);
+
+
+    function getRandomCoordinates() {
+        let randomX = getRandomInt(COL_SIZE);
+        let randomY = getRandomInt(ROW_SIZE);
+
+        let randomCoordinates = {
+            x: randomX,
+            y: randomY
+        }
+
+        return randomCoordinates;
+    }
+
+    function isOccupied(x, y) {
+        let space = document.getElementById("" + y + x);
+        return space.getAttribute("src") !== cardCover;
+    }
+
+    // // determine where to place the ships
+    // let shipsSet = new Set(["00", "20"]); // 2 hardcoded values for now
+    // while (shipsSet.size < NUM_SHIPS) {
+    //     let randomX = getRandomInt(ROW_SIZE);
+    //     let randomY = getRandomInt(COL_SIZE);
+    //     let shipLocation = "" + randomX + randomY;
+    //     shipsSet.add(shipLocation);
+    // }
+    // // turn set into array
+    // let shipsArray = Array.from(shipsSet);
+
+    // let randomLocation = [];
+    //
+    // for (let i = 0; i < 3; i++) {
+    //     let randomX = getRandomInt(ROW_SIZE);
+    //     let randomY = getRandomInt(COL_SIZE);
+    //     let shipLocation = "" + randomX + randomY;
+    //
+    //     randomLocation.push(shipLocation);
+    // }
+    //
+    // // check if locations below are available
+    // console.log(parseInt(randomLocation[0][0]) + 1); // shipsArray[N+1][0] is the row under
+    //
+    // for (let j = 0; j < 3; j++) {
+    //     let shipLocation2 = randomLocation[j];
+    //     console.log(shipLocation2);
+    //     for (let i = 1; i < 3; i++) { // 3 is hardcoded but supposed to be ship length.
+    //         let x = parseInt(shipLocation2[0]);
+    //         let y = parseInt(shipLocation2[1]);
+    //         if (x + i <= 4) {
+    //             //console.log("inside" + parseInt(ships[0]) + i);
+    //             let spaceBelow = parseInt(i);
+    //             shipsArray.push(spaceBelow);
+    //         }
+    //     }
+    // }
+
+
+    // for (let row = 0; row < ROW_SIZE; row++) {
+    //     let aRow = rows[row];
+    //
+    //     for (let col = 0; col < COL_SIZE; col++) {
+    //         let child = aRow.children[col];
+    //         let childId = child.id;
+    //         for (let i = 0; i < ROW_SIZE; i++) {
+    //             let ship = shipsArray[i];
+    //             if (ship === childId) {
+    //                 child.src = hitImage;
+    //             }
+    //         }
+    //
+    //     }
+    // }
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+</script>

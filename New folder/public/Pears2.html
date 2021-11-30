@@ -1,4 +1,4 @@
-<html>
+<html lang="">
 	<head>
 		<style>
 		img {
@@ -7,16 +7,17 @@
 		}
 		</style>
 		<script src="pears2Script.js"></script>
+		<title></title>
 	</head>
 		<body>
-		<div>
-			<h3>Input game size. Example: [4] x [4] (4 rows and 4 columns of cards)</h1>
-			<input id="rowSize" placeHolder="How many rows?..."></input>
-			<input id="colSize" placeHolder="How many columns?..."></input>
-			<button id="startButton" onclick="startGame()">Generate cards</button>
-			<h1 id="hint" hidden>Row and Column values must both be EVEN numbers</h1>
-		<div>
-		<div id="game"></div>
-	</body>
+			<div>
+				<h3>Input game size. Example: [4] x [4] (4 rows and 4 columns of cards)</h3>
+				<label for="rowSize"></label><input id="rowSize" placeHolder="How many rows?..."/>
+				<input id="colSize" placeHolder="How many columns?..."></input>
+				<button id="startButton" onclick="startGame()">Generate cards</button>
+				<h1 id="hint" hidden>Row and Column values must both be EVEN numbers</h1>
+			</div>
+			<div id="game"></div>
+		</body>
 </html>
 
