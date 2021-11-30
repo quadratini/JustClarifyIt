@@ -8,6 +8,7 @@
             border-style: solid;
             border-color: green;
             width: fit-content;
+            pointer-events: none;
         }
         .enemyTurn {
             border-style: solid;
@@ -34,8 +35,6 @@
 
     let game = document.getElementById("game");
     let game2 = document.getElementById("game2");
-    // let hitsHUD = document.getElementById("hits");
-    // let missesHUD = document.getElementById("misses");
     let gameBoard = [];
     let gameBoard2 = [];
     let hiddenBoard = [];
@@ -62,26 +61,26 @@
         for (let i = 0; i < ROW_SIZE; i++) {
             for (let j = 0; j < COL_SIZE; j++) {
                 let imgEl = gameBoard[i].children[j];
+                let clicked = false;
                 imgEl.addEventListener('click', () => {
-                    if (game.className === "playerTurn") {
-                        game.className = "enemyTurn";
-                        game2.className = "playerTurn";
-                    } else {
-                        game.className = "playerTurn";
-                        game2.className = "enemyTurn";
-                    }
-                    let x = imgEl.id[0];
-                    let y = imgEl.id[1];
+                    if (!clicked) {
+                        if (game.className === "playerTurn") {
+                            game.className = "enemyTurn";
+                            game2.className = "playerTurn";
+                        } else {
+                            game.className = "playerTurn";
+                            game2.className = "enemyTurn";
+                        }
+                        let x = imgEl.id[0];
+                        let y = imgEl.id[1];
 
-                    if (hiddenBoard[x][y] === 0) { // no ship there
-                        imgEl.src = "./pairsImages/miss.png";
-                        // misses++;
-                        // missesHUD.innerHTML = "Misses: " + misses;
-                    } else { // ship there
-                        imgEl.src = "./pairsImages/hit.jpg";
-                        // hits++;
-                        // hitsHUD.innerHTML = "Hits: " + hits;
+                        if (hiddenBoard[x][y] === 0) {
+                            imgEl.src = "./pairsImages/miss.png";
+                        } else {
+                            imgEl.src = "./pairsImages/hit.jpg";
+                        }
                     }
+                    clicked = true;
                 });
             }
         }
