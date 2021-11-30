@@ -40,12 +40,5 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/pears', (req, res) => {
-    res.render('pears2', {
-        filePaths: filePaths,
-
-    });
-});
-
 console.log("listening");
 app.listen(3000);
