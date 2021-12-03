@@ -1,0 +1,96 @@
+<html>
+    <style>
+        img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <body>
+        <h1>BattleShip V3</h1>
+        <div id="game"></div>
+    </body>
+</html>
+
+<script>
+    let jsonData = JSON.parse(httpGet('/api/data'));
+
+    let hiddenBoard = jsonData.board;
+    let revealedBoard = [];
+    let game = document.getElementById("game");
+
+    const ROW_SIZE = hiddenBoard.length;
+    const COL_SIZE = hiddenBoard[0].length;
+    const WATER_IMG = "water.jpeg";
+    const MISS_IMG = "miss.jpg";
+    const HIT_IMG = "hit.jpg";
+
+    initBoard();
+    initImagesClickable();
+    getBoard();
+
+    function initImagesClickable() {
+        for (let j = 0; j < COL_SIZE; j++) {
+            for (let i = 0; i < ROW_SIZE; i++) {
+                revealedBoard[j].children[i].addEventListener('click', () => {
+                    let coordinates = {
+                        x: i,
+                        y: j
+                    }
+                    httpPost('/move', coordinates);
+                    console.log(coordinates);
+                    getBoard();
+                });
+            }
+        }
+    }
+
+    function getBoard() {
+        let jsonData = JSON.parse(httpGet('/api/data'));
+        let board = jsonData.board;
+        for (let i = 0; i < ROW_SIZE; i++) {
+            for (let j = 0; j < COL_SIZE; j++) {
+                let img = revealedBoard[j].children[i];
+                if (board[j][i] === 0 || board[j][i] === 1) {
+                    img.src = WATER_IMG;
+                } else if (board[j][i] === "miss") {
+                    img.src = MISS_IMG;
+                } else {
+                    img.src = HIT_IMG;
+                }
+            }
+        }
+    }
+
+    function initBoard() {
+        for (let i = 0; i < ROW_SIZE; i++) {
+            let newDiv = document.createElement("div");
+            for (let j = 0; j < COL_SIZE; j++) {
+                let newImg = document.createElement("img");
+                newImg.src = WATER_IMG;
+                newImg.revealed = false;
+                newDiv.appendChild(newImg);
+            }
+            revealedBoard.push(newDiv);
+        }
+
+        for (let row of revealedBoard) {
+            game.appendChild(row);
+        }
+    }
+
+    function httpPost(theUrl, value) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", theUrl, false);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            value: value
+        }));
+    }
+
+    function httpGet(theUrl) {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+</script>
