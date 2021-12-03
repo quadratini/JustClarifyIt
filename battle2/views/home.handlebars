@@ -1,0 +1,123 @@
+<style>
+    img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<h1>We're going to BATTLE</h1>
+    <body>
+        <div>
+            <h3>Input game size. Example: [4] x [4] (4 rows and 4 columns of cards)</h3>
+            <input id="rowSize" placeHolder="How many rows?..."></input>
+            <input id="colSize" placeHolder="How many columns?..."></input>
+            <button id="startButton" onclick="startGame()">Generate cards</button>
+            <h1 id="hint" hidden>Row and Column values must both be EVEN numbers</h1>
+        </div>
+        <div id="game"></div>
+    </body>
+
+
+<script>
+    console.log("{{{filePaths}}}".split(","));
+    function startGame() {
+        let rowSizeInput = document.getElementById("rowSize");
+        let colSizeInput = document.getElementById("colSize");
+        let game = document.getElementById("game");
+        let startButton = document.getElementById("startButton");
+        let rowSize = rowSizeInput.value;
+        let colSize = colSizeInput.value;
+
+        if (rowSize % 2 == 1 || colSize % 2 == 1) {
+            document.getElementById("hint").hidden = false;
+            return;
+        }
+        document.getElementById("hint").hidden = true;
+
+        const numCards = rowSize * colSize;
+
+        let cardCover = "./pairsImages/cardCovers/cover.png";
+        let imagePaths = "{{{filePaths}}}".split(",");
+        console.log(imagePaths);
+
+        console.log(document.createElement("div"));
+        let rows = [];
+        for (let i = 0; i < rowSize; i++) {
+            let newDiv = document.createElement("div");
+            for (let j = 0; j < colSize; j++) {
+                let newImg = document.createElement("img");
+                newImg.id = "cover" + ((j + 1) + (i * colSize));
+                newImg.src = cardCover;
+                newDiv.appendChild(newImg);
+            }
+            console.log(newDiv);
+            rows.push(newDiv);
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            game.appendChild(rows[i]);
+        }
+
+        // get elements
+        let cards = [];
+        for (let i = 0; i < numCards; i++) {
+            cards[i] = document.getElementById("cover" + (i+1));
+        }
+        console.log(cards);
+
+        let allCardValues = [];
+        console.log(allCardValues[1]);
+        for (let i = 0; i < numCards / 2; i++) {
+            let face = imagePaths[i];
+            for (let j = 0; j < 2; j++) {
+                let randomIndex = getRandomInt(numCards);
+                while (typeof allCardValues[randomIndex] !== "undefined") {
+                    randomIndex = getRandomInt(numCards);
+                }
+                allCardValues[randomIndex] = face;
+            }
+        }
+
+        console.log(allCardValues);
+
+        let pairArray = [];
+        let prevCard = null;
+        for (let i = 0; i < numCards; i++) {
+            cards[i].addEventListener("click", async function() {
+                pairArray.push(allCardValues[i]);
+                cards[i].src = allCardValues[i];
+
+                let cardSrc = cards[i].getAttribute("src");
+                if (prevCard == null) {
+                    prevCard = cards[i];
+                }
+                if ((pairArray[0] == pairArray[1])){ // matching pair
+                    console.log("match");
+                } else if (pairArray.length == 2) { // no match
+                    console.log("no match");
+                    await sleep(1000);
+                    // return cards to cover
+                    prevCard.src = cardCover;
+                    for (let j = 0; j < numCards; j++) {
+                        prevCard.src = cardCover;
+                        if (cards[j].getAttribute("src") == cardSrc) {
+                            cards[j].src = cardCover;
+                        }
+                    }
+                }
+
+                if (pairArray.length == 2) {
+                    pairArray = [];
+                    prevCard = null;
+                }
+            });
+        }
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+</script>
