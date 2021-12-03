@@ -22,7 +22,7 @@ app.post('/move', (req, res) => {
     console.log(req.body.value);
     if (board[y][x] === 0) {
         board[y][x] = "miss";
-    } else {
+    } else if (board[y][x] === 1) {
         board[y][x] = "hit";
     }
     res.json();
