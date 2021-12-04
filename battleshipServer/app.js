@@ -6,24 +6,42 @@ app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json()) // To parse the incoming requests with JSON payloads
 
+const ROW_SIZE = 5;
+const COL_SIZE = 5;
+
+const HIDDEN_EMPTY = 0;
+const HIDDEN_SHIP = 1;
+const SHOW_HIT = 2;
+const SHOW_MISS = 3;
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/api/data', (req, res) => {
+    let obfuscatedBoard = toObfuscatedBoard(copyBoard(hiddenBoard));
+    console.log(hiddenBoard);
+    console.log(obfuscatedBoard);
     res.json({
-        board
+        board: obfuscatedBoard,
+        ROW_SIZE,
+        COL_SIZE
     });
 });
 
-app.post('/move', (req, res) => {
+app.get('/api/resetBoard', (req, res) => {
+    console.log("Reset board Received");
+    randomizeBoard(hiddenBoard);
+    res.json();
+});
+
+app.post('/api/sendShot', (req, res) => {
     let x = req.body.value.x;
     let y = req.body.value.y;
-    console.log(req.body.value);
-    if (board[y][x] === 0) {
-        board[y][x] = "miss";
-    } else if (board[y][x] === 1) {
-        board[y][x] = "hit";
+    if (hiddenBoard[y][x] === HIDDEN_EMPTY) {
+        hiddenBoard[y][x] = SHOW_MISS;
+    } else if (hiddenBoard[y][x] === HIDDEN_SHIP) {
+        hiddenBoard[y][x] = SHOW_HIT;
     }
     res.json();
 });
@@ -32,34 +50,57 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
-const ROW_SIZE = 5;
-const COL_SIZE = 5;
 
-let board = [];
-let coordinates = {
-    x: -1,
-    y: -1
-}
-
+let hiddenBoard = [];
 initHiddenBoard();
-console.log(board);
 
-function handleClick() {
-
-}
+console.log(hiddenBoard);
 
 function initHiddenBoard() {
-    for (let i = 0; i < ROW_SIZE; i++) {
-        board.push([]);
-        for (let j = 0; j < COL_SIZE; j++) {
-            let randomInt = getRandomInt(2);
-            if (randomInt === 0) {
-                board[i][j] = 0;
-            } else {
-                board[i][j] = 1;
+    hiddenBoard = createEmptyBoard();
+    randomizeBoard(hiddenBoard);
+}
+
+function toObfuscatedBoard(board) {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            if (board[j][i] === HIDDEN_EMPTY || board[j][i] === HIDDEN_SHIP) {
+                board[j][i] = 'hidden';
+            } else if (board[j][i] === SHOW_HIT) {
+                board[j][i] = 'hit';
+            } else if (board[j][i] === SHOW_MISS) {
+                board[j][i] = 'miss';
             }
         }
     }
+    return board;
+}
+
+function copyBoard(board) {
+    let copiedBoard = [];
+    for (let i = 0; i < board.length; i++) {
+        copiedBoard[i] = board[i].slice();
+    }
+    return copiedBoard;
+}
+
+function randomizeBoard(board) {
+    for (let i = 0; i < ROW_SIZE; i++) {
+        for (let j = 0; j < COL_SIZE; j++) {
+            board[i][j] = getRandomInt(2);
+        }
+    }
+}
+
+function createEmptyBoard() {
+    let board = [];
+    for (let i = 0; i < ROW_SIZE; i++) {
+        board.push([]);
+        for (let j = 0; j < COL_SIZE; j++) {
+            board[i][j] = 0;
+        }
+    }
+    return board;
 }
 
 function getRandomInt(max) {

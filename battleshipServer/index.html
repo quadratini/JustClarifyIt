@@ -1,25 +1,26 @@
 <html>
-    <style>
-        img {
-            width: 100px;
-            height: 100px;
-        }
-    </style>
-    <body>
-        <h1>BattleShip V3</h1>
-        <div id="game"></div>
-    </body>
+<style>
+    img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<body>
+<h1>BattleShip V3</h1>
+<div id="game"></div>
+<button id="resetButton">Reset Board</button>
+</body>
 </html>
 
 <script>
     let jsonData = JSON.parse(httpGet('/api/data'));
 
-    let hiddenBoard = jsonData.board;
-    let revealedBoard = [];
+    let htmlBoard = [];
     let game = document.getElementById("game");
+    let resetButton = document.getElementById("resetButton");
 
-    const ROW_SIZE = hiddenBoard.length;
-    const COL_SIZE = hiddenBoard[0].length;
+    const ROW_SIZE = jsonData.ROW_SIZE;
+    const COL_SIZE = jsonData.COL_SIZE;
     const WATER_IMG = "water.jpeg";
     const MISS_IMG = "miss.jpg";
     const HIT_IMG = "hit.jpg";
@@ -27,17 +28,20 @@
     initBoard();
     initImagesClickable();
     getBoard();
+    resetButton.addEventListener('click', () => {
+        httpGet('/api/resetBoard');
+        getBoard();
+    });
 
     function initImagesClickable() {
         for (let j = 0; j < COL_SIZE; j++) {
             for (let i = 0; i < ROW_SIZE; i++) {
-                revealedBoard[j].children[i].addEventListener('click', () => {
+                htmlBoard[j].children[i].addEventListener('click', () => {
                     let coordinates = {
                         x: i,
                         y: j
                     }
-                    httpPost('/move', coordinates);
-                    console.log(coordinates);
+                    httpPost('/api/sendShot', coordinates);
                     getBoard();
                 });
             }
@@ -49,8 +53,8 @@
         let board = jsonData.board;
         for (let i = 0; i < ROW_SIZE; i++) {
             for (let j = 0; j < COL_SIZE; j++) {
-                let img = revealedBoard[j].children[i];
-                if (board[j][i] === 0 || board[j][i] === 1) {
+                let img = htmlBoard[j].children[i];
+                if (board[j][i] === 'hidden') {
                     img.src = WATER_IMG;
                 } else if (board[j][i] === "miss") {
                     img.src = MISS_IMG;
@@ -67,13 +71,12 @@
             for (let j = 0; j < COL_SIZE; j++) {
                 let newImg = document.createElement("img");
                 newImg.src = WATER_IMG;
-                newImg.revealed = false;
                 newDiv.appendChild(newImg);
             }
-            revealedBoard.push(newDiv);
+            htmlBoard.push(newDiv);
         }
 
-        for (let row of revealedBoard) {
+        for (let row of htmlBoard) {
             game.appendChild(row);
         }
     }
@@ -89,8 +92,8 @@
 
     function httpGet(theUrl) {
         let xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
         return xmlHttp.responseText;
     }
 </script>
