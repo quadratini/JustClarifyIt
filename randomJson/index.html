@@ -1,0 +1,59 @@
+<html lang="en">
+    <head>
+        <title>RandomJson</title>
+    </head>
+    <body>
+        <p id="person"></p>
+        <button id="generateDataButton">Generate Data</button>
+    </body>
+</html>
+
+<script>
+    let jsonData = JSON.parse(httpGet("/api/data"));
+    let personDetails = jsonData.personDetails;
+
+    let personP = document.getElementById("person");
+    let generateButton = document.getElementById("generateDataButton");
+
+    let name = personDetails.name;
+    let streetAddress = personDetails.streetAddress;
+    let city = personDetails.city;
+    let state = personDetails.state;
+    let zipCode = personDetails.zipCode;
+
+    setInnerHTML();
+
+    generateButton.addEventListener('click', () => {
+        jsonData = JSON.parse(httpGet("/api/generateData"));
+        personDetails = jsonData.personDetails;
+        name = personDetails.name;
+        streetAddress = personDetails.streetAddress;
+        city = personDetails.city;
+        state = personDetails.state;
+        zipCode = personDetails.zipCode;
+
+        setInnerHTML();
+    });
+
+    function setInnerHTML() {
+        personP.innerHTML = name + "<br/>" +
+            streetAddress + "<br/>" +
+            city + ", " + state + " " + zipCode;
+    }
+
+    function httpGet(theUrl) {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
+
+    function httpPost(theUrl, value) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", theUrl, false);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            value: value
+        }));
+    }
+</script>
