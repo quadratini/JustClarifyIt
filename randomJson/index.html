@@ -5,15 +5,19 @@
     <body>
         <p id="person"></p>
         <button id="generateDataButton">Generate Data</button>
+        <button id="generateData25Button">Generate 25</button>
     </body>
 </html>
 
 <script>
+    const BULK_AMOUNT = 25;
+
     let jsonData = JSON.parse(httpGet("/api/data"));
     let personDetails = jsonData.personDetails;
 
     let personP = document.getElementById("person");
     let generateButton = document.getElementById("generateDataButton");
+    let generateData25Button = document.getElementById("generateData25Button");
 
     let name = personDetails.name;
     let streetAddress = personDetails.streetAddress;
@@ -31,7 +35,17 @@
         city = personDetails.city;
         state = personDetails.state;
         zipCode = personDetails.zipCode;
+        setInnerHTML();
+    });
 
+    generateData25Button.addEventListener('click', () => {
+        jsonData = JSON.parse(httpGet("/api/addRandomAddress" + BULK_AMOUNT));
+        personDetails = jsonData.personDetails;
+        name = personDetails.name;
+        streetAddress = personDetails.streetAddress;
+        city = personDetails.city;
+        state = personDetails.state;
+        zipCode = personDetails.zipCode;
         setInnerHTML();
     });
 

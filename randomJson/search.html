@@ -1,0 +1,76 @@
+<html lang="en">
+    <head>
+        <title>RandomJson</title>
+        <style>
+
+        </style>
+    </head>
+    <body>
+        <input id="searchBarInput" placeholder="Do a search...">
+        <button id="submitButton" onclick="runSearch()">Search</button>
+        <button id="searchAllButton" onclick="showAll()">Show All Data</button>
+        <div id="searchResultsDiv">
+            Results:
+        </div>
+    </body>
+</html>
+
+<script>
+    let searchBarInput = document.getElementById("searchBarInput");
+    let submitButton = document.getElementById("submitButton");
+    let searchResultsDiv = document.getElementById("searchResultsDiv");
+
+    searchBarInput.addEventListener("keyup", (e) => {
+        e.preventDefault();
+        if (e.key === 'Enter') {
+            runSearch();
+            submitButton.click();
+        }
+    });
+
+    function runSearch() {
+        let searchResults = getResults(searchBarInput.value.trim());
+        displayResults(searchResults);
+    }
+
+    function showAll() {
+        let all = JSON.parse(httpGet(`/api/showAll`)).addresses;
+        displayResults(all);
+    }
+
+    function displayResults(searchResults) {
+        searchResultsDiv.innerHTML = 'Results:';
+
+        for (let i = 0; i < searchResults.length; i++) {
+            let oneResultHTML = document.createElement("div");
+            let personDetails = searchResults[i];
+            setInnerHTML(oneResultHTML, personDetails);
+            if (i % 2 === 0) {
+                oneResultHTML.style.backgroundColor = '#E8E8E8';
+            }
+            searchResultsDiv.appendChild(oneResultHTML);
+        }
+    }
+
+    function setInnerHTML(element, object) {
+        element.innerHTML = object.name + "<br/>" +
+            object.streetAddress + "<br/>" +
+            object.city + ", " + object.state + " " + object.zipCode;
+    }
+
+    function getResults(keyword) {
+        if (keyword !== '') {
+            searchBarInput.value = '';
+            return JSON.parse(httpGet(`/api/search?keyword=${keyword}`));
+        } else {
+            return [];
+        }
+    }
+
+    function httpGet(theUrl) {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
+</script>
