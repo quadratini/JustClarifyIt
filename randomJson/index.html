@@ -24,7 +24,7 @@
     setInnerHTML();
 
     generateButton.addEventListener('click', () => {
-        jsonData = JSON.parse(httpGet("/api/generateData"));
+        jsonData = JSON.parse(httpGet("/api/addRandomAddress"));
         personDetails = jsonData.personDetails;
         name = personDetails.name;
         streetAddress = personDetails.streetAddress;
