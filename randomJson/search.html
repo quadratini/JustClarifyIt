@@ -23,7 +23,6 @@
     searchBarInput.addEventListener("keyup", (e) => {
         e.preventDefault();
         if (e.key === 'Enter') {
-            runSearch();
             submitButton.click();
         }
     });
@@ -34,7 +33,7 @@
     }
 
     function showAll() {
-        let all = JSON.parse(httpGet(`/api/showAll`)).addresses;
+        let all = JSON.parse(httpGet(`/api/address.json`)).addresses;
         displayResults(all);
     }
 
@@ -59,12 +58,8 @@
     }
 
     function getResults(keyword) {
-        if (keyword !== '') {
-            searchBarInput.value = '';
-            return JSON.parse(httpGet(`/api/search?keyword=${keyword}`));
-        } else {
-            return [];
-        }
+        searchBarInput.value = '';
+        return JSON.parse(httpGet(`/api/search?keyword=${keyword}`));
     }
 
     function httpGet(theUrl) {

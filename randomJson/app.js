@@ -39,8 +39,16 @@ app.get('/api/data', (req, res) => {
     res.json({personDetails});
 });
 
-app.get('/api/showAll', (req, res) => {
+app.get('/api/address', (req, res) => {
+    res.sendFile(__dirname + '/addressList.html');
+});
+
+app.get('/api/address.json', (req, res) => {
     res.json({addresses});
+});
+
+app.get('/api/address/:id', (req, res) => {
+    res.json(addresses[req.params.id]);
 });
 
 app.get('/api/addRandomAddress', (req, res) => {
