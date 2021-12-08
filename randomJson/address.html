@@ -1,0 +1,47 @@
+<html lang="en">
+    <head>
+        <title>RandomJson</title>
+        <style>
+        </style>
+    </head>
+    <body>
+        <h1>THE address</h1>
+        <div id="address"></div>
+    </body>
+</html>
+
+<script>
+    let address = document.getElementById("address");
+
+    let url_string = window.location.href; //window.location.href
+    let c = url_string.substring(url_string.lastIndexOf('/') + 1);
+    let person =  JSON.parse(httpGet(`/api/address/${c}`));
+
+    displayResults(person);
+
+    function displayResults(searchResults) {
+        let oneResultHTML = document.createElement("div");
+        oneResultHTML.setAttribute("id", "" + c);
+        let link = document.createElement("a");
+        link.setAttribute("href", "/api/address/" + c);
+        oneResultHTML.style.backgroundColor = '#E8E8E8';
+        let personDetails = searchResults;
+        setInnerHTML(link, personDetails);
+        oneResultHTML.appendChild(link);
+        address.appendChild(oneResultHTML);
+    }
+
+    function setInnerHTML(element, object) {
+        element.innerHTML = object.name + "<br/>" +
+            object.streetAddress + "<br/>" +
+            object.city + ", " + object.state + " " + object.zipCode + "<br/>";
+
+    }
+
+    function httpGet(theUrl) {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
+</script>
