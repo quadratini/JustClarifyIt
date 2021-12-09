@@ -33,7 +33,7 @@
     }
 
     function showAll() {
-        let all = JSON.parse(httpGet(`/api/address.json`)).addresses;
+        let all = JSON.parse(httpGet(`/address.json`)).addresses;
         displayResults(all);
     }
 
@@ -59,7 +59,7 @@
 
     function getResults(keyword) {
         searchBarInput.value = '';
-        return JSON.parse(httpGet(`/api/search?keyword=${keyword}`));
+        return JSON.parse(httpGet(`/search?keyword=${keyword}`));
     }
 
     function httpGet(theUrl) {

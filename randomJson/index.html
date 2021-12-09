@@ -12,7 +12,7 @@
 <script>
     const BULK_AMOUNT = 25;
 
-    let jsonData = JSON.parse(httpGet("/api/data"));
+    let jsonData = JSON.parse(httpGet("/addRandomAddress"));
     let personDetails = jsonData.personDetails;
 
     let personP = document.getElementById("person");
@@ -28,7 +28,7 @@
     setInnerHTML();
 
     generateButton.addEventListener('click', () => {
-        jsonData = JSON.parse(httpGet("/api/addRandomAddress"));
+        jsonData = JSON.parse(httpGet("/addRandomAddress"));
         personDetails = jsonData.personDetails;
         name = personDetails.name;
         streetAddress = personDetails.streetAddress;
@@ -39,7 +39,7 @@
     });
 
     generateData25Button.addEventListener('click', () => {
-        jsonData = JSON.parse(httpGet("/api/addRandomAddress" + BULK_AMOUNT));
+        jsonData = JSON.parse(httpGet("/addRandomAddress" + BULK_AMOUNT));
         personDetails = jsonData.personDetails;
         name = personDetails.name;
         streetAddress = personDetails.streetAddress;

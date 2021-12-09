@@ -22,7 +22,7 @@
             let oneResultHTML = document.createElement("div");
             oneResultHTML.setAttribute("id", "" + i);
             let link = document.createElement("a");
-            link.setAttribute("href", "/api/address/" + i);
+            link.setAttribute("href", "/address/" + i);
             let personDetails = searchResults[i];
             setInnerHTML(link, personDetails);
             if (i % 2 === 0) {
