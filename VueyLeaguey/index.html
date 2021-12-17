@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Vuey</title>
+        <style>
+            [v-cloak] {
+                display: none;
+            }
+            .champion {
+                margin-bottom: -4px;
+            }
+        </style>
+    </head>
+    <body>
+    <div id="app">
+            <!-- specify the link by passing the `to` prop. -->
+            <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
+            <router-link to="/">Go to Home</router-link>
+            <router-link to="/about">Go to About</router-link>
+        </p>
+
+        <router-view></router-view>
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script>
+
+        let app = Vue.createApp({
+            data: function() {
+                return {
+                    champions: 'a',
+                    imagesUrls: [],
+                }
+            }
+        });
+
+        const Home = { template: '<div>Home</div>' }
+        const About = { template: `
+                <router-link v-for="champion in champions" :to="'/champion/' + champion.id">
+                    <img class="champion" :src="champion.url" />
+                </router-link>
+            `,
+            data: function() {
+                return {
+                    champions: [],
+                    imagesUrls: [],
+                }
+            },
+            async created() {
+                await this.fetchChampionsData();
+                this.fetchChampionImages();
+            },
+            methods: {
+                async fetchChampionsData() {
+                    await fetch('http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json')
+                        .then(r => r.json())
+                        .then(championData => {
+                            this.champions = championData.data;
+                        });
+                },
+                fetchChampionImages() {
+                    for (let [key,value] of Object.entries(this.champions)) {
+                        this.champions[key].url = ('http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/' + value.image.full);
+                    }
+                },
+            }
+        }
+        const Champion = { template: `
+                <div v-if="!loading">
+                    <img :src="'http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/' + championId + '.png'" />
+                    <h1>{{championData[championId].name}}, {{championData[championId].title}}</h1>
+                    <img id="passive" :src="'http://ddragon.leagueoflegends.com/cdn/11.24.1/img/passive/' + championData[championId].passive.image.full"/>
+                    <img id="spells" v-for="spell in championData[championId].spells" :src="'http://ddragon.leagueoflegends.com/cdn/11.24.1/img/spell/' + spell.image.full" />
+                </div>
+            `,
+            data: function() {
+                return {
+                    loading: true,
+                    championData: '',
+                    championImage: 'http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/',
+                    championId: this.$route.params.id,
+                }
+            },
+            created() {
+                this.fetchChampionData();
+                console.log(this.championData);
+            },
+            methods: {
+                async fetchChampionData() {
+                    await fetch('http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion/' + this.championId + '.json')
+                        .then(r => r.json())
+                        .then(championData => {
+                            this.championData = championData.data;
+                            console.log(this.championData[this.championId]);
+                            this.loading = false;
+                        });
+                }
+            }
+        }
+
+        const routes = [
+            { path: '/', component: Home },
+            { path: '/about', component: About },
+            { path: '/champion/:id', component: Champion }
+        ]
+
+        const router = VueRouter.createRouter({
+            // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
+            history: VueRouter.createWebHashHistory(),
+            routes, // short for `routes: routes`
+        })
+
+        app.use(router)
+        app.mount('#app');
+    </script>
+    </body>
+</html>
+
+<!--RGAPI-3fe6d4c3-5802-422b-a009-b75a1dfe3ac8-->

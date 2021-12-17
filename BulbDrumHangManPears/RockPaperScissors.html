@@ -1,0 +1,73 @@
+<html>
+	<h2 id="playerScoreh2">Your score: </h2>
+	<h2 id="cpuScoreh2">Cpu score: </h2>
+	<h2 id="tiesh2">Ties: </h2>
+	<button id="rockButton" value="r">Rock</button>
+	<button id="paperButton" value="p">Paper</button>
+	<button id="scissorsButton" value="s">Scissors</button>
+	<h1 id="result"></h1>
+</html>
+
+<script>
+let rockButton = document.getElementById("rockButton");
+let paperButton = document.getElementById("paperButton");
+let scissorsButton = document.getElementById("scissorsButton");
+let result = document.getElementById("result");
+
+let playerScoreh2 = document.getElementById("playerScoreh2");
+let cpuScoreh2 = document.getElementById("cpuScoreh2");
+let tiesh2 = document.getElementById("tiesh2");
+
+let playerScore = 0;
+let cpuScore = 0;
+let ties = 0;
+
+let buttons = [
+		rockButton,
+		paperButton,
+		scissorsButton
+	]
+
+buttons.forEach(function(button) {
+    button.addEventListener("click", function() {
+		result.innerHTML = getWinner(button.value);
+		playerScoreh2.innerHTML = "Your score: " + playerScore;
+		cpuScoreh2.innerHTML = "Cpu score: " + cpuScore;
+		tiesh2.innerHTML = "Ties: " + ties;
+    });
+});
+
+function getWinner(p1Choice) {
+	let p2Choice = getCpuChoice();
+	switch (p1Choice + p2Choice) {
+		case "pRock":
+		case "rScissors":
+		case "sPaper":
+			playerScore++;
+			return "You Win, cpu chose " + p2Choice;
+		case "rPaper":
+		case "pScissors":
+		case "sRock":
+			cpuScore++;
+			return "You lose, cpu chose " + p2Choice;
+		default:
+			ties++;
+			return "Tie, cpu chose " + p2Choice;
+	}
+}
+
+function getCpuChoice() {
+	let randomInt = getRandomInt(3);
+	if (randomInt === 0) {
+		return "Rock";
+	} else if (randomInt === 1) {
+		return "Paper";
+	} else {
+		return "Scissors";
+	}
+}
+
+function getRandomInt(max) {
+	return Math.floor(Math.random() * max);
+}
+</script>

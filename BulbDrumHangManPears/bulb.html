@@ -1,0 +1,19 @@
+<html>
+	<img id="bulbousImg" src="off.png" />
+	<button id="bulbousButton" onclick="toggle()">hodgie</button>
+</html>
+
+<script>
+function toggle() {
+	let bulbousImg = document.getElementById("bulbousImg");
+	
+	if (bulbousImg.src == "file:///C:/Users/ronny/Desktop/New%20folder/on.png") {
+		document.getElementById("bulbousImg").src="./off.png";
+	} else {
+		document.getElementById("bulbousImg").src="./on.png";
+	}
+	console.log(bulbousImg.src);
+	
+
+}
+</script>

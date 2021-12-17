@@ -1,0 +1,71 @@
+<html>
+	<h1>Test your reaction</h1>
+	<h2 id="tickingText"></h2>
+	<h2 id="winnerText"></h2>
+	<h2 id="reactionTimeText"></h2>
+</html>
+
+<script>
+	const randomLimit = 4;
+	let countDownNumber = 3;
+	let reactionTimeText = document.getElementById("reactionTimeText");
+	let tickingText = document.getElementById("tickingText");
+	let winnerText = document.getElementById("winnerText");
+	let goTime = getRandomStart(randomLimit) + countDownNumber;
+	
+	let tickerInterval = setInterval(countDown, 1000);
+	let goInterval = setInterval(sayGo, 1000);
+	
+	var startTime, endTime;
+	
+	let keyPressed = false;
+	window.addEventListener('keydown', (e) => {
+		if (!keyPressed) {
+			if ((e.key == 'a' || e.key == 'l') && goTime <= 0) {
+				reactionTimeText.innerHTML = end();
+				keyPressed = true;
+				winnerText.innerHTML = e.key + " is the winner...";
+			} else if ((e.key == 'a' || e.key == 'l') && goTime >= 0) {
+				keyPressed = true;
+				winnerText.innerHTML = e.key + " was too early, they lose by default...";
+			}
+			
+		}
+	});
+	
+	function countDown() {
+		if (countDownNumber <= 0 - 1) {
+			tickingText.innerHTML = "Wait...";
+			clearInterval(tickerInterval);
+		} else {
+			tickingText.innerHTML = countDownNumber--;
+		}
+	}
+		
+	function sayGo() {
+		if (countDownNumber <= 0 - 1) {
+			goTime--;
+		}
+		if (goTime == 0 - 1) {
+			tickingText.innerHTML = "GO";
+			start();
+			clearInterval(goInterval);
+		}
+	}
+	
+	function start() {
+	  startTime = new Date();
+	};
+
+	function end() {
+	  endTime = new Date();
+	  var timeDiff = endTime - startTime; //in ms
+	  return timeDiff - 100 + " ms";
+	}
+	
+	function getRandomStart(max) {
+		return Math.floor(Math.random() * max);
+	}
+	
+
+</script>
