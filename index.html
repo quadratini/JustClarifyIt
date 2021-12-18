@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Vuey</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- specify the link by passing the `to` prop. -->
+    <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
+    <router-link to="/">Go to Home</router-link>
+    <router-link to="/about">Go to About</router-link>
+    </p>
+
+    <router-view></router-view>
+</div>
+
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/vue-router@4"></script>
+
+<script>
+    let app = Vue.createApp({
+        data: function() {
+            return {
+
+            }
+        }
+    });
+
+    const routes = [
+        { path: '/', component: Home },
+        { path: '/about', component: About },
+        { path: '/champion/:id', component: Champion }
+    ]
+
+    const router = VueRouter.createRouter({
+        // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
+        history: VueRouter.createWebHashHistory(),
+        routes, // short for `routes: routes`
+    });
+
+    app.use(router)
+    app.mount('#app');
+</script>
