@@ -1,19 +1,13 @@
 <template>
     <div class="Home">
-        <h1>{{ msg }}</h1>
-        <h1>{{ name }}</h1>
-        <h1>{{ age }} years</h1>
+        <h1>{{ message }}</h1>
     </div>
 </template>
 
 <script>
 export default {
     name: 'HelloWorld',
-    props: {
-        msg: String,
-        name: String,
-        age: Number
-    }
+    props: ['message']
 }
 </script>
 
